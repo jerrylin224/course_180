@@ -3,7 +3,7 @@ require "sequel"
 class SequelPersistence
   def initialize(logger)
     @db = Sequel.connect("postgres://localhost/todos")
-    @logger << logger
+    @db.loggers << logger
   end
 
   def query(statement, *params)
@@ -12,19 +12,7 @@ class SequelPersistence
   end
 
   def find_list(id)
-    sql = <<~SQL
-      SELECT lists.*,
-      COUNT(todos.id) AS todos_count,
-      COUNT(NULLIF(todos.completed, true)) AS todos_remaining_count
-      FROM lists
-      LEFT JOIN todos ON todos.list_id = lists.id
-      WHERE lists.id = $1
-      GROUP BY lists.id
-      ORDER BY lists.name;
-    SQL
-    
-    result = query(sql, id)
-    tuple_to_list_hash(result.first)
+    all_lists.where(lists__id: id).first
   end
 
   def all_lists
@@ -73,14 +61,7 @@ class SequelPersistence
   end
 
   def find_todos_for_list(list_id)
-    todo_sql =  "SELECT * FROM todos WHERE list_id = $1"
-    todos_result = query(todo_sql, list_id)
-
-    todos_result.map do |todo_tuple|
-      { id: todo_tuple["id"].to_i,
-        name: todo_tuple["name"],
-        completed: todo_tuple["completed"] == "t" }        
-    end
+    @db[:todos].where(list_id: list_id)
   end
 
   private

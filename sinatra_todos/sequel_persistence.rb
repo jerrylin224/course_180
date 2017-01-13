@@ -27,17 +27,15 @@ class SequelPersistence
   end
 
   def create_new_list(list_name)
-    sql = "INSERT INTO lists (name) VALUES ($1)"
-    query(sql, list_name)
+    @db[:lists].insert(name: list_name)
   end
 
   def delete_list(id)
-    query("DELETE FROM lists WHERE id = $1", id)
+    @db[:lists].where(id: id).delete
   end
 
   def update_list_name(id, new_name)
-    sql = "UPDATE lists SET name = $1 WHERE id = $2"
-    query(sql, new_name, id)
+    @db[:lists].where(id: id).update(name: new_name)
   end
 
   def create_new_todo(list_id, todo_name)

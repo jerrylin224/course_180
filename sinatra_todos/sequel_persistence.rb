@@ -39,23 +39,19 @@ class SequelPersistence
   end
 
   def create_new_todo(list_id, todo_name)
-    sql = "INSERT INTO todos (list_id, name) VALUES ($1, $2)"
-    query(sql, list_id, todo_name)
+    @db[:todos].insert(list_id: list_id, name: todo_name)
   end
 
   def delete_todo_from_list(list_id, todo_id)
-    sql = "DELETE FROM todos WHERE list_id = $1 AND id = $2"
-    query(sql, list_id, todo_id)
+    @db[:todos].where(list_id: list_id, id: todo_id).delete
   end
 
   def update_todo_status(list_id, todo_id, new_status)
-    sql = "UPDATE todos SET completed = $1 WHERE list_id = $2 AND id = $3"
-    query(sql, new_status, list_id, todo_id)
+    @db[:todos].where(list_id: list_id, id: todo_id).update(completed: new_status)
   end
 
   def mark_all_todos_as_completed(list_id)
-    sql = "UPDATE todos SET completed = true WHERE list_id = $1"
-    query(sql, list_id)
+    @db[:todos].where(list_id: list_id).update(completed: true)
   end
 
   def find_todos_for_list(list_id)

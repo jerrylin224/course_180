@@ -8,3 +8,9 @@
 + 如何使用Sequel和PG gem
 + 如何使用view helper和before filter
 + 如何使用virtual row block
+
+
+![](sinatra_todos/public/images/tofo-first.gif)
+
+![](sinatra_todos/public/images/todo-last.gif)
+

@@ -6,7 +6,20 @@ a {
 body {
   font: normal 20px "PT Sans", Helvetica, Arial, sans-serif;
   color: #3f3f3f;
-  background: #ffffff;
+  
+}
+
+body::after {
+  content: "";
+  background: transparent url('../images/background.jpg') center center fixed;
+  background-size: cover;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
 }
 
 body > header {

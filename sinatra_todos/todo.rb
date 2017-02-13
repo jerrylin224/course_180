@@ -39,7 +39,6 @@ helpers do
   end
 end
 
-
 def load_list(id)
   list = @storage.find_list(id)
   return list if list

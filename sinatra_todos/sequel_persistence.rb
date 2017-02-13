@@ -8,18 +8,18 @@ class SequelPersistence
   end
 
   def find_list(id)
-    all_lists.where(lists__id: id).first
+    all_lists.first(lists__id: id)
   end
 
   def all_lists
     DB[:lists].left_join(:todos, list_id: :id).
-    select_all(:lists).
-    select_append do
-      [ count(todos__id).as(todos_count),
-        count(nullif(todos__completed, true)).as(todos_remaining_count) ]
-    end.
-    group(:lists__id).
-    order(:lists__name)
+      select_all(:lists).
+      select_append do
+        [ count(todos__id).as(todos_count),
+          count(nullif(todos__completed, true)).as(todos_remaining_count) ]
+      end.
+      group(:lists__id).
+      order(:lists__name)
   end
 
   def create_new_list(list_name)
@@ -27,6 +27,7 @@ class SequelPersistence
   end
 
   def delete_list(id)
+    DB[:todos].where(list_id: id).delete
     DB[:lists].where(id: id).delete
   end
 
